@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <style>
+        /* Styles specific to the dashboard */
+        .dashboard-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex; /* Or grid */
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-nav li a {
+            display: block;
+            padding: 20px 30px;
+            background-color: var(--secondary-color, #3498db); /* Use variable if defined, else fallback */
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .dashboard-nav li a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>后台管理中心</h1>
+        <p style="text-align: right; margin-bottom: 20px;"><a href="/admin/logout" style="color: #e74c3c;">登出</a></p>
+        
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/admin/carousel">管理首页轮播图片</a></li>
+                <li><a href="/admin/services">管理服务项目</a></li>
+                <li><a href="/admin/about">管理关于我们</a></li>
+                <!-- Add links for future management sections here -->
+            </ul>
+        </nav>
+
+        <!-- Optional: Add some stats or welcome message later -->
+
+    </div>
+</body>
+</html> 

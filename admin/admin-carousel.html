@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理轮播图片</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <!-- Admin Navigation -->
+    <nav class="admin-sub-nav">
+        <a href="/admin">管理中心</a> |
+        <a href="/admin/services">管理服务项目</a> |
+        <a href="/admin/about">管理关于我们</a>
+        <span style="float: right;"><a href="/admin/logout" style="color: #f1c40f;">登出</a></span>
+    </nav>
+
+    <div class="container">
+        <h1>管理首页轮播图片</h1>
+
+        <!-- Upload Form -->
+        <div class="upload-section">
+            <h2>上传新图片</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <!-- Hidden actual file input -->
+                <input type="file" name="carouselImage" id="carouselImageInput" accept="image/*" required>
+                <!-- Custom button label -->
+                <label for="carouselImageInput" class="file-input-label">选择文件</label>
+                <!-- Display selected file name -->
+                <span id="file-name-display" class="file-name-display">未选择文件</span>
+                <button type="submit">上传图片</button>
+            </form>
+            <div id="upload-status"></div>
+        </div>
+
+        <!-- Image List -->
+        <div class="image-list-section">
+            <h2>当前图片列表</h2>
+            <div id="image-list" class="image-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('upload-form');
+        const imageListDiv = document.getElementById('image-list');
+        const uploadStatusDiv = document.getElementById('upload-status');
+        const imageInput = document.getElementById('carouselImageInput');
+        const fileNameDisplay = document.getElementById('file-name-display'); // Get the span
+
+        // Update file name display when a file is selected
+        imageInput.addEventListener('change', () => {
+            if (imageInput.files.length > 0) {
+                fileNameDisplay.textContent = imageInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '未选择文件';
+            }
+        });
+
+        // Function to fetch and display images
+        async function fetchAndDisplayImages() {
+            try {
+                const response = await fetch('/api/carousel-images');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const images = await response.json();
+                imageListDiv.innerHTML = ''; // Clear current list
+                if (images.length === 0) {
+                    imageListDiv.innerHTML = '<p>当前没有轮播图片。</p>';
+                    return;
+                }
+                images.forEach(image => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('image-item');
+                    imgContainer.innerHTML = `
+                        <img src="${image.path}" alt="轮播图 ${image.id}">
+                        <span class="image-filename">${image.filename}</span>
+                        <button data-id="${image.id}" class="delete-button" title="删除">X</button>
+                    `;
+                    imageListDiv.appendChild(imgContainer);
+                });
+            } catch (error) {
+                console.error('Fetch error:', error);
+                imageListDiv.innerHTML = '<p style="color: red;">加载图片列表失败。</p>';
+            }
+        }
+
+        // Function to handle image deletion
+        async function deleteImage(imageId) {
+            if (!confirm('确定要删除这张图片吗？')) {
+                return;
+            }
+            try {
+                const response = await fetch(`/api/carousel-images/${imageId}`, {
+                    method: 'DELETE',
+                });
+                if (!response.ok) {
+                     const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+                console.log('Image deleted successfully');
+                fetchAndDisplayImages(); // Refresh the list
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert(`删除图片失败: ${error.message}`);
+            }
+        }
+
+        // Handle form submission
+        uploadForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            uploadStatusDiv.textContent = '上传中...';
+            const formData = new FormData();
+            // Make sure a file is selected
+            if (imageInput.files.length === 0) {
+                 uploadStatusDiv.textContent = '请先选择一个图片文件。';
+                 uploadStatusDiv.style.color = 'red';
+                 return;
+            }
+            formData.append('carouselImage', imageInput.files[0]);
+
+            try {
+                const response = await fetch('/api/carousel-images', {
+                    method: 'POST',
+                    body: formData,
+                });
+                 if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log('Upload successful:', result);
+                uploadStatusDiv.textContent = '上传成功!';
+                uploadStatusDiv.style.color = 'green';
+                imageInput.value = ''; // Clear the file input
+                fileNameDisplay.textContent = '未选择文件'; // Reset file name display
+                fetchAndDisplayImages(); // Refresh the list
+            } catch (error) {
+                console.error('Upload error:', error);
+                uploadStatusDiv.textContent = `上传失败: ${error.message}`;
+                 uploadStatusDiv.style.color = 'red';
+            }
+        });
+
+        // Add event listener for delete buttons (using event delegation)
+        imageListDiv.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-button')) {
+                const imageId = event.target.getAttribute('data-id');
+                deleteImage(imageId);
+            }
+        });
+
+        // Initial load of images
+        fetchAndDisplayImages();
+    </script>
+</body>
+</html> 

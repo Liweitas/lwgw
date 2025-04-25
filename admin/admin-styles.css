@@ -1,0 +1,263 @@
+/* General Body Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin: 0;
+    padding: 30px;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container */
+.container {
+    max-width: 960px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    margin-top: 0; /* Adjust if needed, may depend on body padding */
+}
+
+/* Headings */
+h1, h2 {
+    color: #1a2b4d; /* Dark blue */
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+h1 {
+    font-size: 2em;
+}
+h2 {
+    font-size: 1.5em;
+    margin-top: 40px; /* Add space above section titles */
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 10px;
+}
+
+/* Section Styling */
+.upload-section, .image-list-section {
+    margin-bottom: 40px;
+    padding: 25px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background-color: #fdfdfd; /* Slightly off-white */
+}
+
+/* Upload Form Styling */
+#upload-form {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Style the file input - Custom button approach */
+#carouselImageInput {
+    display: none; /* Hide the default input */
+}
+.file-input-label {
+    padding: 10px 20px;
+    background-color: #5dade2; /* Light blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.95em;
+    text-align: center;
+    display: inline-block;
+}
+.file-input-label:hover {
+    background-color: #3498db;
+}
+.file-name-display {
+    flex-grow: 1;
+    font-style: italic;
+    color: #555;
+    padding: 8px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    min-width: 200px; /* Ensure it takes space */
+    background-color: #f9f9f9;
+}
+
+#upload-form button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #2ecc71; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+#upload-form button[type="submit"]:hover {
+    background-color: #27ae60;
+}
+
+#upload-status {
+    margin-top: 15px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+#upload-status:empty { /* Hide status if empty */
+    display: none;
+}
+
+/* Image Grid Styling */
+.image-grid {
+    display: grid;
+    /* Aim for more columns, e.g., 6-8+ depending on width */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+    gap: 8px; /* Smaller gap */
+}
+
+.image-item {
+    position: relative;
+    border: 1px solid #eee; /* Lighter border */
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    box-shadow: none; /* Remove shadow for flatter look */
+    transition: none; /* Remove hover transitions */
+    /* Remove flex layout, padding will handle spacing */
+    padding: 0; /* No internal padding needed, image fills */
+    aspect-ratio: 1 / 1; /* Make items square */
+}
+
+.image-item:hover {
+    /* No special hover effect */
+    box-shadow: none;
+    transform: none;
+}
+
+.image-item img {
+    display: block;
+    width: 100%;
+    height: 100%; /* Fill the square container */
+    object-fit: cover;
+    border-radius: 3px; /* Match container slightly */
+    /* Remove margin */
+    margin-bottom: 0;
+}
+
+/* Hide filename by default for phone album look */
+.image-filename {
+    display: none;
+}
+
+.delete-button {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    padding: 2px;
+    background-color: rgba(0, 0, 0, 0.4); /* Darker, less obtrusive background */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.7em; /* Keep small */
+    font-weight: bold;
+    line-height: 1;
+    transition: background-color 0.2s ease;
+    width: 18px; /* Very small button */
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none; /* No shadow */
+    opacity: 0.6; /* Less visible initially */
+}
+
+.image-item:hover .delete-button {
+    opacity: 1; /* Show clearly on hover */
+}
+
+.delete-button:hover {
+    background-color: rgba(231, 76, 60, 0.9); /* Red but still slightly transparent */
+    transform: none; /* No scale effect needed */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 15px;
+    }
+    .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 6px;
+    }
+    #upload-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .file-name-display {
+        margin-top: 10px; /* Add space in column layout */
+    }
+    .image-item img {
+        height: 65px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    .container {
+        padding: 15px;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+    h2 {
+        font-size: 1.2em;
+    }
+    .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+        gap: 4px;
+    }
+    .file-input-label,
+    #upload-form button[type="submit"] {
+        padding: 12px 15px; /* Easier to tap */
+    }
+    .image-item img {
+        height: 60px;
+    }
+    .image-filename {
+        font-size: 0.75em;
+    }
+    .delete-button {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6em;
+    }
+}
+
+/* Admin Sub Navigation */
+.admin-sub-nav {
+    background-color: #34495e; /* Darker blue-grey */
+    padding: 10px 20px;
+    text-align: center;
+    margin-bottom: 20px; /* Space below nav */
+    border-radius: 5px;
+}
+
+.admin-sub-nav a {
+    color: #ecf0f1; /* Light grey text */
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.admin-sub-nav a:hover {
+    color: #ffffff; /* White on hover */
+} 
